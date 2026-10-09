@@ -1,0 +1,43 @@
+version: '3.8'
+
+services:
+  app:
+    image: akaunting/akaunting:latest
+    ports:
+      - "8080:80"
+    environment:
+      APP_ENV: production
+      APP_DEBUG: "false"
+      APP_KEY: base64:clave_base64_aqui
+      DB_CONNECTION: pgsql
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_DATABASE: akaunting
+      DB_USERNAME: akaunting
+      DB_PASSWORD: contraseña_db_segura
+      TZ: Europe/Madrid
+    depends_on:
+      - postgres
+    volumes:
+      - ./storage:/var/www/html/storage
+      - ./public:/var/www/html/public
+    networks:
+      - akaunting-net
+
+  postgres:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_DB: akaunting
+      POSTGRES_USER: akaunting
+      POSTGRES_PASSWORD: contraseña_db_segura
+      TZ: Europe/Madrid
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - akaunting-net
+
+volumes:
+  postgres_data:
+
+networks:
+  akaunting-net:
